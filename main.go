@@ -73,7 +73,7 @@ func main() {
 		}
 		var nateRawSum []*Sum
 		//Calculate Sum
-		err = pgxscan.Select(context.Background(), conn, nateRawSum, `SELECT sum(value) FROM transactions where name='nate'`)
+		err = pgxscan.Select(context.Background(), conn, &nateRawSum, `SELECT sum(value) FROM transactions where name='nate'`)
 		resp := Response{Reports: []Report{nateReport}}
 		tErr := tmpl.Execute(w, struct {
 			Success  bool
