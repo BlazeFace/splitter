@@ -53,14 +53,19 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/split/report", func(w http.ResponseWriter, r *http.Request) {
-		var nateTransactions []Transaction
-		err := pgxscan.Select(context.Background(), conn, nateTransactions, `SELECT (name, value, date_inserted, memo) FROM transactions WHERE name='nate'`)
+		var nateTransactions []*Transaction
+		err := pgxscan.Select(context.Background(), conn, &nateTransactions, `SELECT (date_inserted,value, memo) FROM transactions WHERE name='nate'`)
 		if err != nil {
 			log.Println(err)
 		}
+
 		nateReport := Report{
 			Name:         "Nate",
-			Transactions: nateTransactions,
+			Transactions: nil,
+		}
+
+		for _, element := range nateTransactions {
+			nateReport.Transactions = append(nateReport.Transactions, *element)
 		}
 		_ = tmpl.Execute(w, struct {
 			Report  bool
