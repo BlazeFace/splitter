@@ -32,7 +32,7 @@ type Transaction struct {
 	Time     time.Time `db:"date_inserted"`
 	Value    float64   `db:"value"`
 	Memo     string    `db:"memo"`
-	Category string    `db:"category"`
+	Category string    `db:"catagory"`
 }
 
 type Report struct {
@@ -62,7 +62,7 @@ func main() {
 
 	router.HandleFunc("/split/report", func(w http.ResponseWriter, r *http.Request) {
 		var nateTransactions []*Transaction
-		err := pgxscan.Select(context.Background(), conn, &nateTransactions, `SELECT date_inserted,value, memo, category FROM transactions WHERE name='nate'`)
+		err := pgxscan.Select(context.Background(), conn, &nateTransactions, `SELECT date_inserted,value, memo, catagory FROM transactions WHERE name='nate'`)
 		if err != nil {
 			log.Println(err)
 		}
@@ -83,7 +83,7 @@ func main() {
 
 		//Simran
 		var simTransactions []*Transaction
-		err = pgxscan.Select(context.Background(), conn, &simTransactions, `SELECT date_inserted,value, memo, category FROM transactions WHERE name='simran'`)
+		err = pgxscan.Select(context.Background(), conn, &simTransactions, `SELECT date_inserted,value, memo, catagory FROM transactions WHERE name='simran'`)
 		if err != nil {
 			log.Println(err)
 		}
@@ -104,7 +104,7 @@ func main() {
 
 		//Sunjana
 		var sunTransactions []*Transaction
-		err = pgxscan.Select(context.Background(), conn, &sunTransactions, `SELECT date_inserted,value, memo, category FROM transactions WHERE name='sunjana'`)
+		err = pgxscan.Select(context.Background(), conn, &sunTransactions, `SELECT date_inserted,value, memo, catagory FROM transactions WHERE name='sunjana'`)
 		if err != nil {
 			log.Println(err)
 		}
@@ -171,7 +171,7 @@ func main() {
 
 		if transaction.ValueNate != 0 {
 			nateFV := total * (transaction.ValueNate / 100)
-			_, err := conn.Exec(context.Background(), "INSERT INTO transactions(name, value, memo, category) values('nate', $1, $2, $3)", nateFV, r.FormValue("memo"), rt.Cat)
+			_, err := conn.Exec(context.Background(), "INSERT INTO transactions(name, value, memo, catagory) values('nate', $1, $2, $3)", nateFV, r.FormValue("memo"), rt.Cat)
 			if err != nil {
 				log.Printf("err:%s\n", err)
 				return
@@ -179,7 +179,7 @@ func main() {
 		}
 		if transaction.ValueSim != 0 {
 			simFV := total * (transaction.ValueSim / 100)
-			_, err := conn.Exec(context.Background(), "INSERT INTO transactions(name, value, memo, category) values('simran', $1, $2, $3)", simFV, r.FormValue("memo"), rt.Cat)
+			_, err := conn.Exec(context.Background(), "INSERT INTO transactions(name, value, memo, catagory) values('simran', $1, $2, $3)", simFV, r.FormValue("memo"), rt.Cat)
 			if err != nil {
 				log.Printf("err:%s\n", err)
 				return
@@ -187,7 +187,7 @@ func main() {
 		}
 		if transaction.ValueSun != 0 {
 			sunFV := total * (transaction.ValueSun / 100)
-			_, err := conn.Exec(context.Background(), "INSERT INTO transactions(name, value, memo, category) values('sunjana', $1, $2, $3)", sunFV, r.FormValue("memo"), rt.Cat)
+			_, err := conn.Exec(context.Background(), "INSERT INTO transactions(name, value, memo, catagory) values('sunjana', $1, $2, $3)", sunFV, r.FormValue("memo"), rt.Cat)
 			if err != nil {
 				log.Printf("err:%s\n", err)
 				return
