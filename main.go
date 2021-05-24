@@ -8,7 +8,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 )
 
@@ -37,7 +36,7 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/split", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			tmpl.Execute(w, nil)
 			return
@@ -68,7 +67,10 @@ func main() {
 
 	router.HandleFunc("/split", Split)
 
-	_ = http.ListenAndServe(os.Getenv("SPLT_PORT"), router)
+	err := http.ListenAndServe(":8021", router)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func Split(w http.ResponseWriter, r *http.Request) {
