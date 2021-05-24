@@ -123,9 +123,10 @@ func main() {
 		resp := Response{Reports: []Report{nateReport, simReport, sunReport}}
 		tErr := tmpl.Execute(w, struct {
 			Success  bool
+			Error    bool
 			Report   bool
 			Response Response
-		}{false, true, resp})
+		}{false, false, true, resp})
 		if tErr != nil {
 			log.Println(tErr)
 		}
@@ -155,8 +156,10 @@ func main() {
 		}
 		// do something with details
 		if transaction.ValueNate+transaction.ValueSim+transaction.ValueSun != 100 {
-			tmpl.Execute(w, nil)
-			return
+			_ = tmpl.Execute(w, struct {
+				Success bool
+				Error   bool
+			}{false, true})
 		}
 		splits := []float64{total * (transaction.ValueNate / 100), total * (transaction.ValueSim / 100), total * (transaction.ValueSun / 100)}
 		log.Printf("%.2f %.2f %.2f", splits[0], splits[1], splits[2])
@@ -186,7 +189,10 @@ func main() {
 			}
 		}
 
-		_ = tmpl.Execute(w, struct{ Success bool }{true})
+		_ = tmpl.Execute(w, struct {
+			Success bool
+			Error   bool
+		}{true, false})
 	})
 
 	err := http.ListenAndServe(":8021", router)
