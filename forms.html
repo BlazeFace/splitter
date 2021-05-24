@@ -1,6 +1,17 @@
 <!-- forms.html -->
 {{if .Success}}
 <h1>Thanks for your message!</h1>
+{{else if .Report}}
+{{range .Reports}}
+<h1>{{.Name}}</h1><br />
+<ul>
+    {{range .Transactions}}
+    <li>{{.Time}} {{.Value}} {{.Memo}}</li>
+    {{end}}
+</ul>
+
+{{end}}
+
 {{else}}
 <h1>Split</h1>
 <form method="POST">

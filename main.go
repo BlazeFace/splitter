@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"github.com/georgysavva/scany/pgxscan"
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4"
 	"html/template"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type RawTransaction struct {
@@ -17,11 +19,26 @@ type RawTransaction struct {
 	Total     string
 }
 
-type Transaction struct {
+type Input struct {
 	ValueNate float64
 	ValueSim  float64
 	ValueSun  float64
 	Total     float64
+}
+
+type Transaction struct {
+	Time  time.Time
+	Value float64
+	Memo  string
+}
+
+type Report struct {
+	Name         string
+	Transactions []Transaction
+}
+
+type Response struct {
+	Reports []Report
 }
 
 func main() {
@@ -34,6 +51,22 @@ func main() {
 	tmpl := template.Must(template.ParseFiles("forms.html"))
 
 	router := mux.NewRouter()
+
+	router.HandleFunc("/split/report", func(w http.ResponseWriter, r *http.Request) {
+		var nateTransactions []Transaction
+		err := pgxscan.Select(context.Background(), conn, nateTransactions, `SELECT (name, value, date_inserted, memo) FROM transactions WHERE name='nate'`)
+		if err != nil {
+			log.Println(err)
+		}
+		nateReport := Report{
+			Name:         "Nate",
+			Transactions: nateTransactions,
+		}
+		_ = tmpl.Execute(w, struct {
+			Report  bool
+			Reports Report
+		}{true, nateReport})
+	})
 
 	router.HandleFunc("/split", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -51,7 +84,7 @@ func main() {
 		simvalue, _ := strconv.ParseFloat(rt.ValueSim, 64)
 		sunvalue, _ := strconv.ParseFloat(rt.ValueSun, 64)
 		total, _ := strconv.ParseFloat(rt.Total, 64)
-		transaction := Transaction{
+		transaction := Input{
 			ValueNate: natevalue,
 			ValueSim:  simvalue,
 			ValueSun:  sunvalue,
@@ -84,14 +117,8 @@ func main() {
 		_ = tmpl.Execute(w, struct{ Success bool }{true})
 	})
 
-	router.HandleFunc("/split", Split)
-
 	err := http.ListenAndServe(":8021", router)
 	if err != nil {
 		log.Println(err)
 	}
-}
-
-func Split(w http.ResponseWriter, r *http.Request) {
-
 }
