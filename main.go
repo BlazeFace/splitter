@@ -54,7 +54,7 @@ func main() {
 
 	router.HandleFunc("/split/report", func(w http.ResponseWriter, r *http.Request) {
 		var nateTransactions []*Transaction
-		err := pgxscan.Select(context.Background(), conn, &nateTransactions, `SELECT (date_inserted,value, memo) FROM transactions WHERE name='nate'`)
+		err := pgxscan.Select(context.Background(), conn, &nateTransactions, `SELECT date_inserted,value, memo FROM transactions WHERE name='nate'`)
 		if err != nil {
 			log.Println(err)
 		}
