@@ -68,9 +68,10 @@ func main() {
 			nateReport.Transactions = append(nateReport.Transactions, *element)
 		}
 		tErr := tmpl.Execute(w, struct {
+			Success bool
 			Report  bool
 			Reports Report
-		}{true, nateReport})
+		}{false, true, nateReport})
 		if tErr != nil {
 			log.Println(tErr)
 		}
