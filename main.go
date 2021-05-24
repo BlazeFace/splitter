@@ -67,10 +67,14 @@ func main() {
 		for _, element := range nateTransactions {
 			nateReport.Transactions = append(nateReport.Transactions, *element)
 		}
-		_ = tmpl.Execute(w, struct {
+		tErr := tmpl.Execute(w, struct {
 			Report  bool
 			Reports Report
 		}{true, nateReport})
+		if tErr != nil {
+			log.Println(tErr)
+		}
+		log.Println(nateReport.Transactions[0])
 	})
 
 	router.HandleFunc("/split", func(w http.ResponseWriter, r *http.Request) {
