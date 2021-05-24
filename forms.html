@@ -12,6 +12,8 @@
 <div class="container-fluid p-3 my-3 bg-dark text-white">
 {{if .Report}}
 {{range .Response.Reports}}
+    <div class="row">
+        <div class="col">
 <h1>{{.Name}}</h1>
 <table class="table table-dark table-hover">
     <tr>
@@ -28,6 +30,8 @@
     {{end}}
 </table>
 <h3>Sum for {{.Name}} is ${{.Sum}}</h3>
+        </div>
+    </div>
 {{end}}
 {{else}}
 <h1>Split</h1>
