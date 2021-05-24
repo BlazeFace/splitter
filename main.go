@@ -62,20 +62,20 @@ func main() {
 		log.Printf("%.2f %.2f %.2f", splits[0], splits[1], splits[2])
 
 		nateFV := total * (transaction.ValueNate / 100)
-		_, err := conn.Exec(context.Background(), "INSERT INTO transactions(name, value) values('nate', $1)", nateFV)
+		_, err := conn.Exec(context.Background(), "INSERT INTO transactions(name, value, memo) values('nate', $1, $2)", nateFV, r.FormValue("memo"))
 		if err != nil {
 			log.Printf("err:%s\n", err)
 			return
 		}
 		simFV := total * (transaction.ValueSim / 100)
-		_, err = conn.Exec(context.Background(), "INSERT INTO transactions(name, value) values('simran', $1)", simFV)
+		_, err = conn.Exec(context.Background(), "INSERT INTO transactions(name, value, memo) values('simran', $1, $2)", simFV, r.FormValue("memo"))
 		if err != nil {
 			log.Printf("err:%s\n", err)
 			return
 		}
 
 		sunFV := total * (transaction.ValueSun / 100)
-		_, err = conn.Exec(context.Background(), "INSERT INTO transactions(name, value) values('sunjana', $1)", sunFV)
+		_, err = conn.Exec(context.Background(), "INSERT INTO transactions(name, value, memo) values('sunjana', $1, $2)", sunFV, r.FormValue("memo"))
 		if err != nil {
 			log.Printf("err:%s\n", err)
 			return
