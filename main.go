@@ -8,33 +8,32 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
 
 type RawTransaction struct {
 	ValueNate string
-	ValueSim string
-	ValueSun string
-	Total string
+	ValueSim  string
+	ValueSun  string
+	Total     string
 }
 
 type Transaction struct {
 	ValueNate float64
-	ValueSim float64
-	ValueSun float64
-	Total float64
+	ValueSim  float64
+	ValueSun  float64
+	Total     float64
 }
 
-func main(){
+func main() {
 	conn, dbErr := pgx.Connect(context.Background(), "postgresql://postgres:postgres@localhost/split")
 	if dbErr != nil {
 		log.Printf("Splt: DB Failed to Connect %s", dbErr)
 	}
 	defer conn.Close(context.Background())
 
-
 	tmpl := template.Must(template.ParseFiles("forms.html"))
-
 
 	router := mux.NewRouter()
 
@@ -50,10 +49,10 @@ func main(){
 			ValueSun:  r.FormValue("sunvalue"),
 			Total:     r.FormValue("total"),
 		}
-		natevalue, _  :=  strconv.ParseFloat(rt.ValueNate, 64)
-		simvalue, _  :=  strconv.ParseFloat(rt.ValueSim, 64)
-		sunvalue, _  :=  strconv.ParseFloat(rt.ValueSun, 64)
-		total, _  :=  strconv.ParseFloat(rt.Total, 64)
+		natevalue, _ := strconv.ParseFloat(rt.ValueNate, 64)
+		simvalue, _ := strconv.ParseFloat(rt.ValueSim, 64)
+		sunvalue, _ := strconv.ParseFloat(rt.ValueSun, 64)
+		total, _ := strconv.ParseFloat(rt.Total, 64)
 		transaction := Transaction{
 			ValueNate: natevalue,
 			ValueSim:  simvalue,
@@ -61,7 +60,7 @@ func main(){
 			Total:     total,
 		}
 		// do something with details
-		splits := []float64{total*(transaction.ValueNate/100), total*(transaction.ValueSim/100), total*(transaction.ValueSun/100)}
+		splits := []float64{total * (transaction.ValueNate / 100), total * (transaction.ValueSim / 100), total * (transaction.ValueSun / 100)}
 		fmt.Printf("%.2f %.2f %.2f", splits[0], splits[1], splits[2])
 
 		_ = tmpl.Execute(w, struct{ Success bool }{true})
@@ -69,9 +68,9 @@ func main(){
 
 	router.HandleFunc("/split", Split)
 
-	_ = http.ListenAndServe(":8080", router)
+	_ = http.ListenAndServe(os.Getenv("SPLT_PORT"), router)
 }
 
-func Split(w http.ResponseWriter, r *http.Request){
+func Split(w http.ResponseWriter, r *http.Request) {
 
 }
