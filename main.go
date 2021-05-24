@@ -77,7 +77,50 @@ func main() {
 		for _, element := range nateTransactions {
 			nateReport.Transactions = append(nateReport.Transactions, *element)
 		}
-		resp := Response{Reports: []Report{nateReport}}
+
+		//Simran
+		var simTransactions []*Transaction
+		err = pgxscan.Select(context.Background(), conn, &simTransactions, `SELECT date_inserted,value, memo FROM transactions WHERE name='simran'`)
+		if err != nil {
+			log.Println(err)
+		}
+
+		var simRawSum []*Sum
+		//Calculate Sum
+		err = pgxscan.Select(context.Background(), conn, &simRawSum, `SELECT sum(value) FROM transactions where name='simran'`)
+
+		simReport := Report{
+			Name:         "Simran",
+			Transactions: nil,
+			Sum:          simRawSum[0].Sum,
+		}
+
+		for _, element := range simTransactions {
+			simReport.Transactions = append(simReport.Transactions, *element)
+		}
+
+		//Sunjana
+		var sunTransactions []*Transaction
+		err = pgxscan.Select(context.Background(), conn, &sunTransactions, `SELECT date_inserted,value, memo FROM transactions WHERE name='sunjana'`)
+		if err != nil {
+			log.Println(err)
+		}
+
+		var sunRawSum []*Sum
+		//Calculate Sum
+		err = pgxscan.Select(context.Background(), conn, &sunRawSum, `SELECT sum(value) FROM transactions where name='sun'`)
+
+		sunReport := Report{
+			Name:         "Sunjana",
+			Transactions: nil,
+			Sum:          sunRawSum[0].Sum,
+		}
+
+		for _, element := range sunTransactions {
+			sunReport.Transactions = append(sunReport.Transactions, *element)
+		}
+
+		resp := Response{Reports: []Report{nateReport, simReport, sunReport}}
 		tErr := tmpl.Execute(w, struct {
 			Success  bool
 			Report   bool
@@ -86,7 +129,6 @@ func main() {
 		if tErr != nil {
 			log.Println(tErr)
 		}
-		log.Println(nateReport.Transactions[0])
 	})
 
 	router.HandleFunc("/split", func(w http.ResponseWriter, r *http.Request) {

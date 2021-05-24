@@ -3,12 +3,21 @@
 <h1>Thanks for your message!</h1>
 {{else if .Report}}
 {{range .Response.Reports}}
-<h1>{{.Name}}</h1><br />
-<ul>
+<h1>{{.Name}}</h1>
+<table style="width:50%">
+    <tr>
+        <th>Time</th>
+        <th>Value</th>
+        <th>Memo</th>
+    </tr>
     {{range .Transactions}}
-    <li>{{.Time}} {{.Value}} {{.Memo}}</li>
+    <tr>
+        <td>{{.Time}}</td>
+        <td>{{.Value}}</td>
+        <td>{{.Memo}}</td>
+    </tr>
     {{end}}
-</ul>
+</table>>
 <h3>Sum for {{.Name}} is ${{.Sum}}</h3>
 {{end}}
 {{else}}
