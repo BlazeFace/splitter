@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4"
 	"html/template"
@@ -60,7 +59,27 @@ func main() {
 		}
 		// do something with details
 		splits := []float64{total * (transaction.ValueNate / 100), total * (transaction.ValueSim / 100), total * (transaction.ValueSun / 100)}
-		fmt.Printf("%.2f %.2f %.2f", splits[0], splits[1], splits[2])
+		log.Printf("%.2f %.2f %.2f", splits[0], splits[1], splits[2])
+
+		nateFV := total * (transaction.ValueNate / 100)
+		_, err := conn.Exec(context.Background(), "INSERT INTO transactions(name, value) values('nate', $1)", nateFV)
+		if err != nil {
+			log.Printf("err:%s\n", err)
+			return
+		}
+		simFV := total * (transaction.ValueSim / 100)
+		_, err = conn.Exec(context.Background(), "INSERT INTO transactions(name, value) values('simran', $1)", simFV)
+		if err != nil {
+			log.Printf("err:%s\n", err)
+			return
+		}
+
+		sunFV := total * (transaction.ValueSun / 100)
+		_, err = conn.Exec(context.Background(), "INSERT INTO transactions(name, value) values('sunjana', $1)", sunFV)
+		if err != nil {
+			log.Printf("err:%s\n", err)
+			return
+		}
 
 		_ = tmpl.Execute(w, struct{ Success bool }{true})
 	})
