@@ -35,20 +35,30 @@
 {{end}}
 {{else}}
 <h1>Split</h1>
-<form method="POST">
-    <label>Nate</label>
-    <input type="text" name="natevalue"><br />
-    <label>Simran</label>
-    <input type="text" name="simvalue"><br />
-    <label>Sunjana</label>
-    <input type="text" name="sunvalue"><br />
-
-    <label>Total</label>
-    <input type="text" name="total"><br />
-
-    <label>Memo:</label>
-    <input type="text" name="memo"><br />
-    <input type="submit">
+    <form method="POST">
+        <div class="form-group">
+        div class="form-group">
+        <label for="natevalue">Nate:</label>
+        <input type="text" class="form-control" id="natevalue">
+</div>
+<div class="form-group">
+    <label for="simvalue">Simran:</label>
+    <input type="text" class="form-control" id="simvalue">
+</div>
+<div class="form-group">
+    <label for="sunvalue">Sunjana:</label>
+    <input type="text" class="form-control" id="sunvalue">
+</div>
+        <div class="form-group">
+            <label for="sel1">Categories:</label>
+            <select class="form-control" id="sel1">
+                <option>Food</option>
+                <option>Recreation</option>
+                <option>Transportation</option>
+                <option>Technology</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
 </form>
     {{if .Success}}
     <div class="alert alert-success alert-dismissible">
