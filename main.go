@@ -67,11 +67,13 @@ func main() {
 		for _, element := range nateTransactions {
 			nateReport.Transactions = append(nateReport.Transactions, *element)
 		}
+
+		resp := Response{Reports: []Report{nateReport}}
 		tErr := tmpl.Execute(w, struct {
-			Success bool
-			Report  bool
-			Reports Report
-		}{false, true, nateReport})
+			Success  bool
+			Report   bool
+			Response Response
+		}{false, true, resp})
 		if tErr != nil {
 			log.Println(tErr)
 		}

@@ -2,7 +2,7 @@
 {{if .Success}}
 <h1>Thanks for your message!</h1>
 {{else if .Report}}
-{{range .Reports}}
+{{range .Response}}
 <h1>{{.Name}}</h1><br />
 <ul>
     {{range .Transactions}}
