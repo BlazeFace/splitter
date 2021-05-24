@@ -79,7 +79,7 @@ func main() {
 			Success  bool
 			Report   bool
 			Response Response
-			sum      float64
+			Sum      float64
 		}{false, true, resp, nateRawSum[0].Sum})
 		if tErr != nil {
 			log.Println(tErr)
