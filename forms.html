@@ -20,13 +20,14 @@
         <th>Time</th>
         <th>Value</th>
         <th>Memo</th>
+        <th>Category</th>
     </tr>
     {{range .Transactions}}
     <tr>
         <td>{{.Time}}</td>
         <td>{{.Value}}</td>
         <td>{{.Memo}}</td>
-        <td>{{.Category}}</td>
+        <td><span class="badge badge-warning">{{.Category}}</span></td>
     </tr>
     {{end}}
 </table>
