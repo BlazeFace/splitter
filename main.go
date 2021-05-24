@@ -108,7 +108,7 @@ func main() {
 
 		var sunRawSum []*Sum
 		//Calculate Sum
-		err = pgxscan.Select(context.Background(), conn, &sunRawSum, `SELECT sum(value) FROM transactions where name='sun'`)
+		err = pgxscan.Select(context.Background(), conn, &sunRawSum, `SELECT sum(value) FROM transactions where name='sunjana'`)
 
 		sunReport := Report{
 			Name:         "Sunjana",
