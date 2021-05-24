@@ -35,6 +35,7 @@ type Transaction struct {
 type Report struct {
 	Name         string
 	Transactions []Transaction
+	Sum          float64
 }
 
 type Response struct {
@@ -63,24 +64,25 @@ func main() {
 			log.Println(err)
 		}
 
+		var nateRawSum []*Sum
+		//Calculate Sum
+		err = pgxscan.Select(context.Background(), conn, &nateRawSum, `SELECT sum(value) FROM transactions where name='nate'`)
+
 		nateReport := Report{
 			Name:         "Nate",
 			Transactions: nil,
+			Sum:          nateRawSum[0].Sum,
 		}
 
 		for _, element := range nateTransactions {
 			nateReport.Transactions = append(nateReport.Transactions, *element)
 		}
-		var nateRawSum []*Sum
-		//Calculate Sum
-		err = pgxscan.Select(context.Background(), conn, &nateRawSum, `SELECT sum(value) FROM transactions where name='nate'`)
 		resp := Response{Reports: []Report{nateReport}}
 		tErr := tmpl.Execute(w, struct {
 			Success  bool
 			Report   bool
 			Response Response
-			Sum      float64
-		}{false, true, resp, nateRawSum[0].Sum})
+		}{false, true, resp})
 		if tErr != nil {
 			log.Println(tErr)
 		}
