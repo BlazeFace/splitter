@@ -27,9 +27,9 @@ type Input struct {
 }
 
 type Transaction struct {
-	Time  time.Time
-	Value float64
-	Memo  string
+	Time  time.Time `db:"date_inserted"`
+	Value float64   `db:"value"`
+	Memo  string    `db:"memo"`
 }
 
 type Report struct {
